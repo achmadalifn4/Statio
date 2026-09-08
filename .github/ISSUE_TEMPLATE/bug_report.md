@@ -3,11 +3,11 @@ name: Bug report
 about: Create a report to help us improve
 title: ''
 labels: 'bug'
-assignees: 'AnandChowdhary'
+assignees: 'achmadalifn4'
 
 ---
 
-<!-- If you have a question, you should use Discussions instead: https://github.com/orgs/upptime/discussions -->
+<!-- If you have a question, you should use Discussions instead: https://github.com/achmadalifn4/Statio/discussions -->
 
 **Describe the bug**
 A clear and concise description of what the bug is.

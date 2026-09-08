@@ -1,0 +1,41 @@
+# Deploys the built status page (gh-pages branch, produced by "Static Site CI")
+# to Tencent EdgeOne Pages / EdgeOne Makers.
+#
+# Setup:
+# 1. Get an API token from your EdgeOne Pages dashboard.
+# 2. Add it as a repository secret named EDGEONE_API_TOKEN
+#    (Settings > Secrets and variables > Actions).
+# 3. Optionally set a repository variable EDGEONE_PROJECT_NAME
+#    (Settings > Secrets and variables > Actions > Variables) to control
+#    the EdgeOne Pages project name; defaults to the repo name.
+
+name: EdgeOne Pages Deploy
+on:
+  workflow_run:
+    workflows: ["Static Site CI"]
+    types: [completed]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    name: Deploy to EdgeOne Pages
+    runs-on: ubuntu-latest
+    if: ${{ github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success' }}
+    steps:
+      - name: Checkout gh-pages branch
+        uses: actions/checkout@v6
+        with:
+          ref: gh-pages
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.11.0"
+
+      - name: Deploy to EdgeOne Pages
+        env:
+          EDGEONE_API_TOKEN: ${{ secrets.EDGEONE_API_TOKEN }}
+        run: |
+          npx edgeone pages deploy . \
+            -n "${{ vars.EDGEONE_PROJECT_NAME || github.event.repository.name }}" \
+            -t "$EDGEONE_API_TOKEN"
